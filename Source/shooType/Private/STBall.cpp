@@ -4,6 +4,7 @@
 #include "STBall.h"
 #include "Components/StaticMeshComponent.h"
 #include "Engine.h"
+#include "BehaviorTree/BehaviorTreeTypes.h"
 
 ASTBall::ASTBall()
 {
@@ -31,10 +32,20 @@ void ASTBall::Tick(float DeltaTime)
 	CurrentDirection.Z = 0;
 	Cos = FVector::DotProduct(VectorToCenter, CurrentDirection) / VectorToCenter.Size() / CurrentDirection.Size();
 	Sin = std::sqrt(1 - Cos * Cos);
-
-	
-	
+	Delta = Sin * std::sqrt((SpawnLocation.X-GetActorLocation().X)*(SpawnLocation.X-GetActorLocation().X) -
+		(SpawnLocation.Y-GetActorLocation().Y)*(SpawnLocation.Y-GetActorLocation().Y));
 	if (GEngine)
-		GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Yellow, *FString::SanitizeFloat(Sin));
+		GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Yellow, *FString::SanitizeFloat(Delta));
+	
+	if (FMath::IsNearlyZero(Delta))
+		return;
+	
+	VectorToCenter.Normalize();
+	BallMesh->AddImpulse(GetForceDirection(VectorToCenter, FVector::CrossProduct(VectorToCenter, CurrentDirection).Z) * BalancingForceModifier * Delta);
+}
+
+FVector ASTBall::GetForceDirection(const FVector& Original, const float CrossProductZ)
+{
+	return CrossProductZ > 0 ? FVector(Original.Y, -Original.X, 0) : FVector(-Original.Y, Original.X, 0);
 }
 
