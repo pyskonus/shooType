@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// Created by pyskonus for the shooType game.
 
 #pragma once
 
@@ -6,12 +6,11 @@
 #include "GameFramework/GameModeBase.h"
 #include "shooTypeGameModeBase.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class SHOOTYPE_API AshooTypeGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
-	
+
+public:
+	AshooTypeGameModeBase();
 };

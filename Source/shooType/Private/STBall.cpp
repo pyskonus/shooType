@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Created by pyskonus for the shooType game.
 
 
 #include "STBall.h"
@@ -19,18 +19,20 @@ void ASTBall::BeginPlay()
 {
 	Super::BeginPlay();
 
-	SpawnLocation = GetActorLocation();
-	VectorToCenter = FVector::ZeroVector - SpawnLocation;
+	/*SpawnLocation = GetActorLocation();
+	VectorToCenter = FVector::ZeroVector - SpawnLocation;	/// center of the bowl is 0,0,Z
 	VectorToCenter.Z = 0;
+	VectorToCenter.Normalize();*/
 }
 
 void ASTBall::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	CurrentDirection = GetActorLocation() - SpawnLocation;
+	/*CurrentDirection = GetActorLocation() - SpawnLocation;
 	CurrentDirection.Z = 0;
-	Cos = FVector::DotProduct(VectorToCenter, CurrentDirection) / VectorToCenter.Size() / CurrentDirection.Size();
+	CurrentDirection.Normalize();
+	Cos = FVector::DotProduct(VectorToCenter, CurrentDirection);
 	Sin = std::sqrt(1 - Cos * Cos);
 	Delta = Sin * std::sqrt((SpawnLocation.X-GetActorLocation().X)*(SpawnLocation.X-GetActorLocation().X) -
 		(SpawnLocation.Y-GetActorLocation().Y)*(SpawnLocation.Y-GetActorLocation().Y));
@@ -40,12 +42,11 @@ void ASTBall::Tick(float DeltaTime)
 	if (FMath::IsNearlyZero(Delta))
 		return;
 	
-	VectorToCenter.Normalize();
-	BallMesh->AddImpulse(GetForceDirection(VectorToCenter, FVector::CrossProduct(VectorToCenter, CurrentDirection).Z) * BalancingForceModifier * Delta);
+	BallMesh->AddImpulse(GetForceDirection(VectorToCenter, FVector::CrossProduct(VectorToCenter, CurrentDirection).Z) * BalancingForceModifier * Delta);*/
 }
 
-FVector ASTBall::GetForceDirection(const FVector& Original, const float CrossProductZ)
+/*FVector ASTBall::GetForceDirection(const FVector& Original, const float CrossProductZ)
 {
 	return CrossProductZ > 0 ? FVector(Original.Y, -Original.X, 0) : FVector(-Original.Y, Original.X, 0);
-}
+}*/
 

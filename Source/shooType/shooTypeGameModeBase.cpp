@@ -1,5 +1,10 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// Created by pyskonus for the shooType game.
 
 
 #include "shooTypeGameModeBase.h"
+#include "STPlayerController.h"
 
+AshooTypeGameModeBase::AshooTypeGameModeBase()
+{
+	PlayerControllerClass = ASTPlayerController::StaticClass();
+}
