@@ -3,7 +3,6 @@
 
 #include "STPlayerController.h"
 #include "Blueprint/UserWidget.h"
-#include "UI/Public/STTextBox.h"
 
 /*void ASTPlayerController::SetupInputComponent()
 {
@@ -18,7 +17,7 @@ void ASTPlayerController::SignalInput()
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("KeyPressed"), true, FVector2D(2,2));
 }*/
 
-void ASTPlayerController::BeginPlay()
+/*void ASTPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -29,17 +28,17 @@ void ASTPlayerController::BeginPlay()
 		if (TextBoxContainerInst)
 		{
 			
-			/*TextBoxContainerInst->OnTextChanged.BindLambda([](const FText& Text){UE_LOG(LogTemp, Warning, TEXT("Mmm mmm yeah yeah"))});*/
+			/*TextBoxContainerInst->OnTextChanged.BindLambda([](const FText& Text){UE_LOG(LogTemp, Warning, TEXT("Mmm mmm yeah yeah"))});#1#
 			TextBoxContainerInst->AddToViewport();
 			TextBoxContainerInst->MyOnTextChanged.AddUObject(this, &ASTPlayerController::OnTextChanged);
-			/*TextBoxContainerInst->OnTextChanged.BindUObject(this, &ASTPlayerController::OnTextChanged);*/
+			/*TextBoxContainerInst->OnTextChanged.BindUObject(this, &ASTPlayerController::OnTextChanged);#1#
 		}
 
-		/*SetInputMode(this, TextBoxContainerInst.)*/
+		/*SetInputMode(this, TextBoxContainerInst.)#1#
 		
 		bShowMouseCursor = true;
 	}
-}
+}*/
 
 void ASTPlayerController::OnTextChanged(const FText& Text)
 {
