@@ -5,6 +5,10 @@
 
 void USTTextBox::OnTextChanged(const FText& Text)
 {
-	UE_LOG(LogTemp, Warning, TEXT("It works"));
-	MyOnTextChanged.Broadcast(Text);
+	if (!Text.IsEmpty())
+		MyOnTextChanged.Broadcast(Text);
+}
+
+void USTTextBox::OnFocus()
+{
 }

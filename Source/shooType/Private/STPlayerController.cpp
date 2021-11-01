@@ -42,6 +42,5 @@ void ASTPlayerController::SignalInput()
 
 void ASTPlayerController::OnTextChanged(const FText& Text)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Entered"));
-	UE_LOG(LogTemp, Error, TEXT("%s"), *Text.ToString());
+	UE_LOG(LogTemp, Display, TEXT("%s"), *Text.ToString());
 }

@@ -19,4 +19,8 @@ public:
 protected:
 	UFUNCTION(BlueprintCallable)
 	void OnTextChanged(const FText& Text);
+
+	UFUNCTION(BlueprintCallable)
+	void OnFocus();
+	
 };
