@@ -13,4 +13,11 @@ class SHOOTYPE_API AshooTypeGameModeBase : public AGameModeBase
 
 public:
 	AshooTypeGameModeBase();
+
+protected:
+	/*UFUNCTION(BlueprintCallable, Category=Game)*/
+	virtual void StartPlay() override;
+
+private:
+	TMap<int, TArray<FString>> Words;
 };
