@@ -3,3 +3,18 @@
 
 #include "STGameState.h"
 
+void ASTGameState::OnTextChanged(const FText& Text)
+{
+	UE_LOG(LogTemp, Display, TEXT("%s"), *Text.ToString());
+}
+
+bool ASTGameState::AddWord(FString Word)
+{
+	for (const auto Element: RemainingWords)
+	{
+		if (Word.Left(1) == Element.Left(1))
+			return false;
+	}
+	RemainingWords.Add(Word);
+	return true;
+}

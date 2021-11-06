@@ -2,6 +2,8 @@
 
 
 #include "UI/STHUD.h"
+
+#include "STGameState.h"
 #include "Blueprint/UserWidget.h"
 #include "UI/Public/STTextBox.h"
 #include "STPlayerController.h"
@@ -9,7 +11,8 @@
 void ASTHUD::BeginPlay()
 {
 	Super::BeginPlay();
-
+	FString A = "matafaka";
+	UE_LOG(LogTemp, Warning, TEXT("%s"), *A.RightChop(1));
 	if (TextBoxContainer)
 	{
 		const auto STPlayerController = Cast<ASTPlayerController>(GetOwningPlayerController());
@@ -18,14 +21,15 @@ void ASTHUD::BeginPlay()
 		
 		if (TextBoxContainerInst)
 		{
-			
 			/*TextBoxContainerInst->OnTextChanged.BindLambda([](const FText& Text){UE_LOG(LogTemp, Warning, TEXT("Mmm mmm yeah yeah"))});*/
 			/*TextBoxContainerInst->OnTextChanged.BindUObject(this, &ASTPlayerController::OnTextChanged);*/
 			
 			TextBoxContainerInst->AddToViewport();
-			TextBoxContainerInst->MyOnTextChanged.AddUObject(STPlayerController, &ASTPlayerController::OnTextChanged);
+			if (GetWorld())
+			{
+				ASTGameState* STGameState = GetWorld()->GetGameState<ASTGameState>();
+				TextBoxContainerInst->MyOnTextChanged.AddUObject(STGameState, &ASTGameState::OnTextChanged);
+			}
 		}
-
-		/*SetInputMode(this, TextBoxContainerInst.)*/
 	}
 }

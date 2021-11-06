@@ -4,7 +4,6 @@
 #include "STBall.h"
 #include "Components/StaticMeshComponent.h"
 #include "Engine.h"
-#include "BehaviorTree/BehaviorTreeTypes.h"
 
 ASTBall::ASTBall()
 {

@@ -3,6 +3,7 @@
 .idea/
 
 Content/
+Package/
 
 # Compiled Object files
 *.slo
