@@ -6,6 +6,8 @@
 #include "GameFramework/GameModeBase.h"
 #include "shooTypeGameModeBase.generated.h"
 
+class ASTBall;
+
 USTRUCT()
 struct FState
 {
@@ -17,7 +19,7 @@ struct FState
 
 	int WordsEntered = 0;
 
-	int MainLength = 3;
+	int MainLength = 2;
 };
 
 UCLASS()
@@ -37,7 +39,16 @@ protected:
 	float WavePause = 3.0f;
 
 	UPROPERTY(EditAnywhere, Category = "Time")
-	float WordPause = 1.5f;
+	float WordPause = 2.5f;
+
+	UPROPERTY(EditAnywhere, Category = "Location")
+	float Radius = 9900.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Location")
+	float SpawnZ = 420.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Classes")
+	TSubclassOf<ASTBall> BallClass;
 
 private:
 	TMap<int, TArray<FString>> Words;
@@ -45,6 +56,8 @@ private:
 	FTimerHandle TimerHandle;
 
 	FState State;
+
+	TArray<ASTBall*> Ballz;
 
 	UFUNCTION()
 	void SpawnWord();

@@ -16,8 +16,10 @@ public:
 
 	bool AddWord(FString Word);
 
-	virtual void Tick(float DeltaSeconds) override;
+	/*virtual void Tick(float DeltaSeconds) override;*/
 
 private:
 	TArray<FString> RemainingWords;
+
+	int CurrentIndex = -1;	/// -1 means no word is currently being typed
 };

@@ -13,8 +13,8 @@
 void ASTHUD::BeginPlay()
 {
 	Super::BeginPlay();
-	FString A = "matafaka";
-	UE_LOG(LogTemp, Warning, TEXT("%s"), *A.RightChop(1));
+	/*FString A = "matafaka";
+	UE_LOG(LogTemp, Warning, TEXT("%s"), *A.RightChop(1));*/
 	if (TextBoxContainer)
 	{
 		const auto STPlayerController = Cast<ASTPlayerController>(GetOwningPlayerController());

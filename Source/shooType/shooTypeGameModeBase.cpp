@@ -5,6 +5,7 @@
 
 /*#include "STPlayerController.h"*/
 #include "Engine.h"
+#include "STBall.h"
 #include "Core/Public/Misc/FileHelper.h"
 #include "TimerManager.h"
 #include "Math/UnrealMathUtility.h"
@@ -60,6 +61,7 @@ void AshooTypeGameModeBase::StartWave()
 void AshooTypeGameModeBase::SpawnWord()
 {
 	ChooseWord();
+	
 	/*UE_LOG(LogTemp, Warning, TEXT("Spawned word"));*/		/// TODO: do the shit
 	if (State.WordsSpawned < 15)
 		GetWorldTimerManager().SetTimer(TimerHandle, this, &AshooTypeGameModeBase::SpawnWord, WordPause, false);
@@ -88,6 +90,16 @@ void AshooTypeGameModeBase::ChooseWord()
 				Index = 0;
 		} else
 		{
+			UE_LOG(LogTemp, Display, TEXT("%s"), *Words[Length][Index]);
+
+			/// spawn ball
+			const float SpawnDirection = FMath::DegreesToRadians(FMath::RandRange(-45, 45));
+			const float X = Radius * FMath::Cos(SpawnDirection);
+			const float Y = Radius * FMath::Sin(SpawnDirection);
+			const FTransform SpawnTransform = FTransform(FRotator::ZeroRotator, FVector(X, Y, SpawnZ));
+			ASTBall* NewBall = GetWorld()->SpawnActor<ASTBall>(BallClass, SpawnTransform);
+			Ballz.Add(NewBall);
+			
 			State.WordsSpawned++;
 			break;
 		}
