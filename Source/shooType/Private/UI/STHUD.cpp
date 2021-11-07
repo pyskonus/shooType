@@ -7,6 +7,8 @@
 #include "Blueprint/UserWidget.h"
 #include "UI/Public/STTextBox.h"
 #include "STPlayerController.h"
+#include "Kismet/GameplayStatics.h"
+#include "shooType/shooTypeGameModeBase.h"
 
 void ASTHUD::BeginPlay()
 {
@@ -29,6 +31,8 @@ void ASTHUD::BeginPlay()
 			{
 				ASTGameState* STGameState = GetWorld()->GetGameState<ASTGameState>();
 				TextBoxContainerInst->MyOnTextChanged.AddUObject(STGameState, &ASTGameState::OnTextChanged);
+				AshooTypeGameModeBase* STGameMode = Cast<AshooTypeGameModeBase>(GetWorld()->GetAuthGameMode());
+				TextBoxContainerInst->OnFocusDelegate.AddUObject(STGameMode, &AshooTypeGameModeBase::StartWave);
 			}
 		}
 	}

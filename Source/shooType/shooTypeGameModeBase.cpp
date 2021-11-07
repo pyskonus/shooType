@@ -3,11 +3,13 @@
 
 #include "shooTypeGameModeBase.h"
 
-#include <chrono>
-
-#include "STPlayerController.h"
+/*#include "STPlayerController.h"*/
 #include "Engine.h"
 #include "Core/Public/Misc/FileHelper.h"
+#include "TimerManager.h"
+#include "Math/UnrealMathUtility.h"
+#include "shooType/Public/STGameState.h"
+
 
 AshooTypeGameModeBase::AshooTypeGameModeBase()
 {
@@ -15,7 +17,7 @@ AshooTypeGameModeBase::AshooTypeGameModeBase()
 	/*HUDClass = ASTHUD::StaticClass();
 	GameStateClass = ASTGameState::StaticClass();*/
 
-	for (int i = 2; i <= 15; i++)
+	for (int i = 2; i <= 14; i++)
 	{
 		Words.Add(i, TArray<FString>());
 	}
@@ -24,9 +26,9 @@ AshooTypeGameModeBase::AshooTypeGameModeBase()
 void AshooTypeGameModeBase::StartPlay()
 {
 	Super::StartPlay();
-	for (int i = 2; i <= 15; i++)
+	for (int i = 2; i <= 14; i++)
 	{
-		const FString Path = "shooType/Content/Data/" + FString::FromInt(i) + ".txt";	/*FPaths::ProjectContentDir() + */
+		const FString Path = FPaths::ProjectContentDir() + "Data/" + FString::FromInt(i) + ".txt";	/*FPaths::ProjectContentDir() + */ /*shooType/Content/*/
 		if (!FFileHelper::LoadANSITextFileToStrings(*Path, nullptr, Words[i]))
 		{
 			if(GEngine)
@@ -44,13 +46,50 @@ void AshooTypeGameModeBase::StartPlay()
 	}
 	
 	/// TODO: what if file cannot be opened
+}
 
-	int i = 0;
-	for (const auto Word: Words[15])
+void AshooTypeGameModeBase::StartWave()
+{
+	GetWorldTimerManager().SetTimer(TimerHandle, this, &AshooTypeGameModeBase::SpawnWord, WavePause, false);
+
+	State.CurrentWave++;
+	if (State.MainLength < 12)
+		State.MainLength++;
+}
+
+void AshooTypeGameModeBase::SpawnWord()
+{
+	ChooseWord();
+	/*UE_LOG(LogTemp, Warning, TEXT("Spawned word"));*/		/// TODO: do the shit
+	if (State.WordsSpawned < 15)
+		GetWorldTimerManager().SetTimer(TimerHandle, this, &AshooTypeGameModeBase::SpawnWord, WordPause, false);
+}
+
+void AshooTypeGameModeBase::ChooseWord()
+{
+	if (!GetWorld())
+		return;
+	
+	int Length = State.MainLength;
+	if (State.WordsSpawned%5 % 2 == 1)
+		State.WordsSpawned%5 == 1 ? Length-- : Length++;
+
+	int InitialIndex = FMath::RandRange(0, Words[Length].Num());
+	int Index = InitialIndex;
+	
+	ASTGameState* STGameState = GetWorld()->GetGameState<ASTGameState>();
+	
+	do
 	{
-		if (i > 4)
+		if (!STGameState->AddWord(Words[Length][Index]))
+		{
+			Index++;
+			if(Index == Words[Length].Num())
+				Index = 0;
+		} else
+		{
+			State.WordsSpawned++;
 			break;
-		UE_LOG(LogTemp, Warning, TEXT("%s"), *Word);
-		i++;
-	}
+		}
+	} while (Index != InitialIndex);
 }

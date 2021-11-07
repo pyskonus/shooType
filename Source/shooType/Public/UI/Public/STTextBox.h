@@ -7,6 +7,7 @@
 #include "STTextBox.generated.h"
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FMyOnTextChanged, const FText&);
+DECLARE_MULTICAST_DELEGATE(FOnFocus);
 
 UCLASS()
 class SHOOTYPE_API USTTextBox : public UUserWidget
@@ -15,6 +16,7 @@ class SHOOTYPE_API USTTextBox : public UUserWidget
 
 public:
 	FMyOnTextChanged MyOnTextChanged;
+	FOnFocus OnFocusDelegate;
 	
 protected:
 	UFUNCTION(BlueprintCallable)

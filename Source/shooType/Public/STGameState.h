@@ -16,6 +16,8 @@ public:
 
 	bool AddWord(FString Word);
 
+	virtual void Tick(float DeltaSeconds) override;
+
 private:
 	TArray<FString> RemainingWords;
 };

@@ -11,4 +11,5 @@ void USTTextBox::OnTextChanged(const FText& Text)
 
 void USTTextBox::OnFocus()
 {
+	OnFocusDelegate.Broadcast();
 }
