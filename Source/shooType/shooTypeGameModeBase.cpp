@@ -34,17 +34,12 @@ void AshooTypeGameModeBase::StartPlay()
 		{
 			if(GEngine)
 				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("FATAL ERROR: CANNOT LOAD WORDS"));
-			
-			/*FLatentActionInfo LatentActionInfo;
-			LatentActionInfo.CallbackTarget = this;
-			LatentActionInfo.ExecutionFunction = "TestCall";
-			LatentActionInfo.UUID = 123;
-			LatentActionInfo.Linkage = 0;
-			UKismetSystemLibrary::Delay(this, 5.0f, LatentActionInfo);*/
-			
-			/*UKismetSystemLibrary::QuitGame(this, UGameplayStatics::GetPlayerController(GetWorld(), 0), EQuitPreference::Quit, true);*/	/// TODO:: uncomment
+			return;
 		}
 	}
+
+	ASTGameState* STGameState = GetWorld()->GetGameState<ASTGameState>();
+	STGameState->OnWordChanged.AddUObject(this, &AshooTypeGameModeBase::OnWordChanged);
 	
 	/// TODO: what if file cannot be opened
 }
@@ -62,7 +57,7 @@ void AshooTypeGameModeBase::SpawnWord()
 {
 	ChooseWord();
 	
-	/*UE_LOG(LogTemp, Warning, TEXT("Spawned word"));*/		/// TODO: do the shit
+	/*UE_LOG(LogTemp, Warning, TEXT("Spawned word"));*/		/// TODO: Niagara effect
 	if (State.WordsSpawned < 15)
 		GetWorldTimerManager().SetTimer(TimerHandle, this, &AshooTypeGameModeBase::SpawnWord, WordPause, false);
 }
@@ -98,10 +93,44 @@ void AshooTypeGameModeBase::ChooseWord()
 			const float Y = Radius * FMath::Sin(SpawnDirection);
 			const FTransform SpawnTransform = FTransform(FRotator::ZeroRotator, FVector(X, Y, SpawnZ));
 			ASTBall* NewBall = GetWorld()->SpawnActor<ASTBall>(BallClass, SpawnTransform);
+			/// TODO: set new ball's word
+			NewBall->CurrentWord = Words[Length][Index];
+			NewBall->SetWord(Words[Length][Index]);
 			Ballz.Add(NewBall);
 			
 			State.WordsSpawned++;
 			break;
 		}
 	} while (Index != InitialIndex);
+}
+
+void AshooTypeGameModeBase::OnWordChanged(const FString& OldWord)
+{
+	if (CurrentBall == nullptr)
+	{
+		FindBallByWord(OldWord);
+		CurrentBall->CurrentWord = OldWord.RightChop(1);
+		CurrentBall->SetWord(OldWord.RightChop(1));
+	} else
+	{
+		if (OldWord.Len() == 1)
+		{
+			Ballz.Remove(CurrentBall);
+			CurrentBall->Destroy();
+			CurrentBall = nullptr;
+		} else
+		{
+			CurrentBall->CurrentWord = OldWord.RightChop(1);
+			CurrentBall->SetWord(OldWord.RightChop(1));
+		}
+	}
+}
+
+void AshooTypeGameModeBase::FindBallByWord(const FString& OldWord)
+{
+	for (const auto Ball: Ballz)
+	{
+		if (Ball->CurrentWord == OldWord)
+			CurrentBall = Ball;
+	}
 }

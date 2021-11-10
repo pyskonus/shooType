@@ -62,5 +62,12 @@ private:
 	UFUNCTION()
 	void SpawnWord();
 
+	UFUNCTION()
+	void OnWordChanged(const FString& OldWord);
+
 	void ChooseWord();
+	void FindBallByWord(const FString& OldWord);
+
+	UPROPERTY()
+	ASTBall* CurrentBall = nullptr;
 };

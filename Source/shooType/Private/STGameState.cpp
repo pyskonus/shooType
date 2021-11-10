@@ -5,8 +5,6 @@
 
 void ASTGameState::OnTextChanged(const FText& Text)
 {
-	/*UE_LOG(LogTemp, Display, TEXT("%s"), *Text.ToString());*/
-
 	if (CurrentIndex == -1)
 	{
 		for (int i = 0; i < RemainingWords.Num(); ++i)
@@ -14,8 +12,8 @@ void ASTGameState::OnTextChanged(const FText& Text)
 			if (Text.ToString() == RemainingWords[i].Left(1))
 			{
 				CurrentIndex = i;
+				OnWordChanged.Broadcast(RemainingWords[CurrentIndex]);
 				RemainingWords[CurrentIndex] = RemainingWords[CurrentIndex].RightChop(1);	/// TODO: delegate to update STBall's text render component
-				UE_LOG(LogTemp, Warning, TEXT("%s"), *RemainingWords[CurrentIndex]);
 				return;
 			}
 		}
@@ -27,14 +25,14 @@ void ASTGameState::OnTextChanged(const FText& Text)
 			if (RemainingWords[CurrentIndex].Len() == 1)
 			{
 				/// TODO: delegate to destroy STBall
-				UE_LOG(LogTemp, Error, TEXT("%s"), *RemainingWords[CurrentIndex]);
+				OnWordChanged.Broadcast(RemainingWords[CurrentIndex]);
 				RemainingWords.RemoveAt(CurrentIndex);
 				CurrentIndex = -1;
 			} else
 			{
 				/// TODO: delegate to update STBall's text render component
+				OnWordChanged.Broadcast(RemainingWords[CurrentIndex]);
 				RemainingWords[CurrentIndex] = RemainingWords[CurrentIndex].RightChop(1);
-				UE_LOG(LogTemp, Warning, TEXT("%s"), *RemainingWords[CurrentIndex]);
 			}
 		} else
 		{

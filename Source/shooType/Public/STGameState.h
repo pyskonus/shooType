@@ -6,6 +6,8 @@
 #include "GameFramework/GameStateBase.h"
 #include "STGameState.generated.h"
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnWordChanged, const FString&);
+
 UCLASS()
 class SHOOTYPE_API ASTGameState : public AGameStateBase
 {
@@ -16,7 +18,7 @@ public:
 
 	bool AddWord(FString Word);
 
-	/*virtual void Tick(float DeltaSeconds) override;*/
+	FOnWordChanged OnWordChanged;
 
 private:
 	TArray<FString> RemainingWords;
