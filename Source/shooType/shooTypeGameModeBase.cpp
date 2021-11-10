@@ -48,6 +48,9 @@ void AshooTypeGameModeBase::StartWave()
 {
 	GetWorldTimerManager().SetTimer(TimerHandle, this, &AshooTypeGameModeBase::SpawnWord, WavePause, false);
 
+	
+	State.WordsEntered = 0;
+	State.WordsSpawned = 0;
 	State.CurrentWave++;
 	if (State.MainLength < 12)
 		State.MainLength++;
@@ -60,6 +63,7 @@ void AshooTypeGameModeBase::SpawnWord()
 	/*UE_LOG(LogTemp, Warning, TEXT("Spawned word"));*/		/// TODO: Niagara effect
 	if (State.WordsSpawned < 15)
 		GetWorldTimerManager().SetTimer(TimerHandle, this, &AshooTypeGameModeBase::SpawnWord, WordPause, false);
+		
 }
 
 void AshooTypeGameModeBase::ChooseWord()
@@ -93,7 +97,6 @@ void AshooTypeGameModeBase::ChooseWord()
 			const float Y = Radius * FMath::Sin(SpawnDirection);
 			const FTransform SpawnTransform = FTransform(FRotator::ZeroRotator, FVector(X, Y, SpawnZ));
 			ASTBall* NewBall = GetWorld()->SpawnActor<ASTBall>(BallClass, SpawnTransform);
-			/// TODO: set new ball's word
 			NewBall->CurrentWord = Words[Length][Index];
 			NewBall->SetWord(Words[Length][Index]);
 			Ballz.Add(NewBall);
@@ -118,6 +121,9 @@ void AshooTypeGameModeBase::OnWordChanged(const FString& OldWord)
 			Ballz.Remove(CurrentBall);
 			CurrentBall->Destroy();
 			CurrentBall = nullptr;
+			State.WordsEntered++;
+			if (State.WordsEntered == State.WordsSpawned && State.WordsEntered == 15)
+				StartWave();
 		} else
 		{
 			CurrentBall->CurrentWord = OldWord.RightChop(1);
