@@ -12,6 +12,7 @@
 #include "shooType/Public/STGameState.h"
 #include "NiagaraFunctionLibrary.h"
 #include "NiagaraSystem.h"
+#include "Kismet/GameplayStatics.h"
 
 
 AshooTypeGameModeBase::AshooTypeGameModeBase()
@@ -128,14 +129,15 @@ void AshooTypeGameModeBase::OnWordChanged(const FString& OldWord)
 		FindBallByWord(OldWord);
 		CurrentBall->CurrentWord = OldWord.RightChop(1);
 		CurrentBall->SetWord(OldWord.RightChop(1));
-		/// TODO: successful key pressing sound
+		
+		UGameplayStatics::PlaySoundAtLocation(this, KeyPressed, FVector::ZeroVector);
 	} else
 	{
 		if (OldWord.Len() == 1)
 		{
 			Ballz.Remove(CurrentBall);
 			UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), Explosion, CurrentBall->GetActorLocation());
-			/// TODO: play explosion sound
+			UGameplayStatics::PlaySoundAtLocation(this, ExplosionSound, CurrentBall->GetActorLocation());
 			CurrentBall->Destroy();
 			CurrentBall = nullptr;
 			State.WordsEntered++;
@@ -145,7 +147,8 @@ void AshooTypeGameModeBase::OnWordChanged(const FString& OldWord)
 		{
 			CurrentBall->CurrentWord = OldWord.RightChop(1);
 			CurrentBall->SetWord(OldWord.RightChop(1));
-			/// TODO: successful key pressing sound
+
+			UGameplayStatics::PlaySoundAtLocation(this, KeyPressed, FVector::ZeroVector);
 		}
 	}
 }

@@ -69,6 +69,12 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Materials")
 	UMaterialInstance* Orange;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	USoundBase* KeyPressed;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	USoundBase* ExplosionSound;
+
 private:
 	TMap<int, TArray<FString>> Words;
 
