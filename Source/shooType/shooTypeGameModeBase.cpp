@@ -10,6 +10,8 @@
 #include "TimerManager.h"
 #include "Math/UnrealMathUtility.h"
 #include "shooType/Public/STGameState.h"
+#include "NiagaraFunctionLibrary.h"
+#include "NiagaraSystem.h"
 
 
 AshooTypeGameModeBase::AshooTypeGameModeBase()
@@ -47,11 +49,12 @@ void AshooTypeGameModeBase::StartPlay()
 void AshooTypeGameModeBase::StartWave()
 {
 	GetWorldTimerManager().SetTimer(TimerHandle, this, &AshooTypeGameModeBase::SpawnWord, WavePause, false);
-
 	
 	State.WordsEntered = 0;
 	State.WordsSpawned = 0;
 	State.CurrentWave++;
+	/// TODO: play UI animation
+	
 	if (State.MainLength < 12)
 		State.MainLength++;
 }
@@ -60,7 +63,6 @@ void AshooTypeGameModeBase::SpawnWord()
 {
 	ChooseWord();
 	
-	/*UE_LOG(LogTemp, Warning, TEXT("Spawned word"));*/		/// TODO: Niagara effect
 	if (State.WordsSpawned < 15)
 		GetWorldTimerManager().SetTimer(TimerHandle, this, &AshooTypeGameModeBase::SpawnWord, WordPause, false);
 		
@@ -99,6 +101,18 @@ void AshooTypeGameModeBase::ChooseWord()
 			ASTBall* NewBall = GetWorld()->SpawnActor<ASTBall>(BallClass, SpawnTransform);
 			NewBall->CurrentWord = Words[Length][Index];
 			NewBall->SetWord(Words[Length][Index]);
+
+			if (Words[Length][Index].Len() < 6)
+				NewBall->BallMesh->SetMaterial(0, White);
+			else if (Words[Length][Index].Len() < 9)
+				NewBall->BallMesh->SetMaterial(0, Blue);
+			else if (Words[Length][Index].Len() < 12)
+				NewBall->BallMesh->SetMaterial(0, Green);
+			else if (Words[Length][Index].Len() < 14)
+				NewBall->BallMesh->SetMaterial(0, Purple);
+			else
+				NewBall->BallMesh->SetMaterial(0, Orange);
+				
 			Ballz.Add(NewBall);
 			
 			State.WordsSpawned++;
@@ -114,11 +128,14 @@ void AshooTypeGameModeBase::OnWordChanged(const FString& OldWord)
 		FindBallByWord(OldWord);
 		CurrentBall->CurrentWord = OldWord.RightChop(1);
 		CurrentBall->SetWord(OldWord.RightChop(1));
+		/// TODO: successful key pressing sound
 	} else
 	{
 		if (OldWord.Len() == 1)
 		{
 			Ballz.Remove(CurrentBall);
+			UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), Explosion, CurrentBall->GetActorLocation());
+			/// TODO: play explosion sound
 			CurrentBall->Destroy();
 			CurrentBall = nullptr;
 			State.WordsEntered++;
@@ -128,6 +145,7 @@ void AshooTypeGameModeBase::OnWordChanged(const FString& OldWord)
 		{
 			CurrentBall->CurrentWord = OldWord.RightChop(1);
 			CurrentBall->SetWord(OldWord.RightChop(1));
+			/// TODO: successful key pressing sound
 		}
 	}
 }

@@ -7,6 +7,7 @@
 #include "shooTypeGameModeBase.generated.h"
 
 class ASTBall;
+class UNiagaraSystem;
 
 USTRUCT()
 struct FState
@@ -49,6 +50,24 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Classes")
 	TSubclassOf<ASTBall> BallClass;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "VFX")
+	UNiagaraSystem* Explosion;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Materials")
+	UMaterialInstance* White;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Materials")
+	UMaterialInstance* Blue;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Materials")
+	UMaterialInstance* Green;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Materials")
+	UMaterialInstance* Purple;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Materials")
+	UMaterialInstance* Orange;
 
 private:
 	TMap<int, TArray<FString>> Words;
